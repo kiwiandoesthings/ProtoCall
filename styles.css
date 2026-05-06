@@ -298,17 +298,14 @@ p {
 	color: var(--header-color);
 }
 
-#room-search-results {
+.search-results {
 	display: flex;
 	flex-direction: column;
 	background-color: var(--background-color-selected);
-	flex-grow: 1;
+	flex: 1;
 	align-items: center;
-	max-height: 80%;
 	width: 70%;
-	margin-top: auto;
-	margin-bottom: auto;
+	margin: 40px 0px 40px 0px;
 	justify-content: center; 
-	margin-bottom: auto;
 	overflow-y: auto;
 }
