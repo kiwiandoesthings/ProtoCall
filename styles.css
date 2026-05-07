@@ -245,6 +245,16 @@ nav {
 	background-color: var(--background-color-selected);
 }
 
+.timestamp:hover {
+    color: var(--message-color-selected);
+	background-color: var(--background-color-selected);
+}
+
+.message + .timestamp:hover {
+    color: var(--timestamp-color-selected);
+	background-color: var(--background-color-selected);
+}
+
 .message-author {
 	display: inline;
 }
@@ -312,12 +322,16 @@ p {
 }
 
 .search-results-list {
-	list-style: none;
-	padding-left: 0px;
 	margin: 0px;
+	display: flex;
+    flex-direction: column;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
 }
 
 .search-result-item {
+	padding: 5px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -335,6 +349,10 @@ img {
 	display: flex;
 	flex-direction: row;
 	gap: 0px 5px;
+}
+
+.result-actions a {
+	display: flex;
 }
 
 .result-actions img {

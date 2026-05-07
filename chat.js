@@ -102,7 +102,7 @@ async function connectToRoomID(roomID) {
 
 async function setRoomInfos(roomJson) {
 	document.getElementById("room-name").innerHTML = roomJson.roomName;
-	document.getElementById("room-status").innerHTML = "Public";
+	document.getElementById("room-status").innerHTML = roomJson.privacy;
 	document.getElementById("room-status").style.color = "var(--public-color)";
 
 	var listItem = document.createElement("li");
