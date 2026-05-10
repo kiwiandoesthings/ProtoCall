@@ -96,7 +96,16 @@ async function addAllNewRooms() {
 		alert("Your request could not be authenticated. Please clear your cookies and sign in again.");
 	}
 	clearList("new-room-search-results");
+	var knownRooms = getCookie("knownrooms").split(".");
+	var realRooms = knownRooms.slice(1);
+	var knownNames = [];
+	for (room in realRooms) {
+		knownNames[room] = realRooms[room].split(",")[0];
+	}
 	for (var room of json) {
+		if (knownNames.includes(room.roomName)) {
+			continue;
+		}
 		addVisualRoom(room.roomName, room.roomID, "new-room-search-results", `
         <img src="resources/add.png" class="icon-small" onclick="addRoom(\'` + room.roomName + `\', ` + room.roomID + `)">`);
 	}
