@@ -23,5 +23,5 @@ start();
 easyStart();
 
 async function toggleRoomPrivacy() {
-	await connection.invoke("push_setRoomPrivacy", roomID, oppositePublicity, getCookie("userid"), getCookie("usersecret"));
+	await connection.invoke("push_setRoomPrivacy", roomID, oppositePublicity, getCookie("userID"), getCookie("userSecret"));
 }

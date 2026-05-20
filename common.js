@@ -1,4 +1,4 @@
-const connection = new signalR.HubConnectionBuilder().withUrl("https://api.kiwiandoesthings.place/protocall?userID=" + getCookie("userid") + "&userSecret=" + getCookie("usersecret")).withAutomaticReconnect().build();
+const connection = new signalR.HubConnectionBuilder().withUrl("https://api.kiwiandoesthings.place/protocall?userID=" + getCookie("userID")).withAutomaticReconnect().build();
 
 connection.on("push_serverMessage", (alertMessage) => {
 	alert(alertMessage);
@@ -35,7 +35,7 @@ async function easyStart() {
     }
 }
 
-async function getUserInfo(userID = getCookie("userid")) {
+async function getUserInfo(userID = getCookie("userID")) {
 	var userInfo = await fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + userID);
 	var json = await userInfo.json();
 	if (json == "-1") {

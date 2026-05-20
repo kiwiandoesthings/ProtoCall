@@ -1,10 +1,10 @@
 document.getElementById("warning").innerHTML = "WARNING: This version of ProtoCall is in testing. Beware of bugs and unfinished features";
 
 async function loadClient() {
-	if (getCookie("userid") == "" || getCookie("usersecret") == "") {
+	if (getCookie("userID") == "" || getCookie("userSecret") == "") {
 		window.location = "/login.html";
 	} else {
-		var info = await getUserInfo(getCookie("userid"));
+		var info = await getUserInfo(getCookie("userID"));
 		var username = await info.userUsername;
 		var color = await info.userColor;
 		document.getElementById("username-view").innerHTML = username;
@@ -73,7 +73,7 @@ async function connectToRoom() {
 	var json = await getRoomInfo(roomID);
 	if (json == "-1") {
 		if (confirm("That room does not exist! Create it?")) {
-			connection.invoke("push_createRoom", roomName, getCookie("userid"), getCookie("usersecret"));
+			connection.invoke("push_createRoom", roomName, getCookie("userID"), getCookie("userSecret"));
 		}
 		return;
 	}
@@ -106,7 +106,7 @@ async function setRoomInfos(roomJson) {
 	document.getElementById("room-status").style.color = "var(--public-color)";
 
 	var listItem = document.createElement("li");
-	var userInfo = await getUserInfo(getCookie("userid"));
+	var userInfo = await getUserInfo(getCookie("userID"));
 	listItem.innerHTML = userInfo.userUsername;
 	listItem.style.color = "#" + userInfo.userColor;
 	//document.getElementById("connected-users").appendChild(listItem);
@@ -182,7 +182,7 @@ async function send() {
 		return;
 	}
 	if (connected && currentRoomID != -1) {
-		await connection.invoke("push_sendMessage", getCookie("userid"), getCookie("usersecret"), sanitizedText, getDatetime(), parseInt(currentRoomID));
+		await connection.invoke("push_sendMessage", getCookie("userID"), getCookie("userSecret"), sanitizedText, getDatetime(), parseInt(currentRoomID));
 		if (shouldCancelMessageClear) {
 			shouldCancelMessageClear = false;
 			return;
@@ -289,5 +289,5 @@ function editRoom() {
 }
 
 async function requestMessages(start, end) {
-	await connection.invoke("push_messageRequest", start, end, getCookie("userid"), getCookie("usersecret"), parseInt(currentRoomID));
+	await connection.invoke("push_messageRequest", start, end, getCookie("userID"), getCookie("userSecret"), parseInt(currentRoomID));
 }

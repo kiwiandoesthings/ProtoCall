@@ -1,4 +1,4 @@
-if (getCookie("userid") != "" && getCookie("usersecret") != "") {
+if (getCookie("userID") != "" && getCookie("userSecret") != "") {
 	window.location = "/account.html";
 }
 
@@ -71,6 +71,6 @@ async function login() {
 }
 
 function setLoginInfo(userID, userSecret) {
-	setCookie("userid", userID);
-	setCookie("usersecret", userSecret);
+	setCookie("userID", userID);
+	setCookie("userSecret", userSecret);
 }

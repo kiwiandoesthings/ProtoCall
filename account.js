@@ -1,4 +1,4 @@
-if (getCookie("userid") == "" || getCookie("usersecret") == "") {
+if (getCookie("userID") == "" || getCookie("userSecret") == "") {
 	window.location = "/login.html";
 }
 
@@ -15,7 +15,7 @@ async function start() {
     try {
         await connection.start();
         console.log("Connected to server");
-		var userInfo = await fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + getCookie("userid"));
+		var userInfo = await fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + getCookie("userID"));
 		var json = await userInfo.json();
 		if (json == "-1") {
 			window.location = "/login.html";
@@ -30,8 +30,8 @@ async function start() {
 start();
 
 function logout() {
-	setCookie("userid", "");
-	setCookie("usersecret", "");
+	setCookie("userID", "");
+	setCookie("userSecret", "");
 	window.location = "/login.html";
 }
 
@@ -54,3 +54,15 @@ function addVisualRoom(roomName, roomID) {
 function resetKnownRooms() {
 	setCookie("knownrooms", ".HomeRoom,0");
 }
+
+function promptDelete() {
+	if (prompt("Are you sure you want to delete your account? You will lose ownership of any rooms you own and they will be made public.")) {
+		connection.invoke("push_deleteAccount", getCookie("userID"), getCookie("userSecret"));
+	}
+}
+
+connection.on("push_accountDeleted", async() => {
+	alert("Your account has been deleted");
+	setCookie("userID", "");
+	setCookie("userSecret", "");
+});
