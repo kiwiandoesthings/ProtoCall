@@ -1,4 +1,4 @@
-if (getCookie("userID") != "" && getCookie("userSecret") != "") {
+if (getCookie("userID") != "") {
 	window.location = "/account.html";
 }
 
@@ -34,19 +34,19 @@ async function register() {
 	var color = colorPicker.value.slice(1);
 	var passwordValue = password.value;
 
-	var thisInfo = await fetch("https://api.kiwiandoesthings.place/request_deviceInfo");
+	var thisInfo = await fetch(apiString + "request_deviceInfo", {
+    	credentials: "include" 
+	});
 	var thisJson = await thisInfo.json();
-	var loginInfo = await fetch("https://api.kiwiandoesthings.place/request_registerAccount?username=" + usernameValue + "&password=" + passwordValue + "&color=" + color + "&info=" + thisJson.id);
-	var json = await loginInfo.json();
-	var userID = json.userID;
-	var userSecret = json.userSecret;
-	if (json  == "-1") {
-		alert("Account is either already registered or provided registration info is invalid");
+	var loginInfo = await fetch(apiString + "push_registerAccount?username=" + usernameValue + "&password=" + encodeURIComponent(passwordValue) + "&color=" + color + "&info=" + thisJson.id, {
+    	method: "POST",
+		credentials: "include" 
+	});
+	if (!loginInfo.ok) {
+		alert(await loginInfo.text());
 		return;
 	}
-	console.log("UserID returned: " + userID);
-	console.log("UserSecret returned: " + userSecret);
-	setLoginInfo(userID, userSecret);
+	var json = await loginInfo.json();
 	setCookie("loggedin", true);
 	window.location.replace('/account.html');
 }
@@ -55,22 +55,14 @@ async function login() {
 	var usernameValue = username.value;
 	var passwordValue = password.value;
 
-	var loginInfo = await fetch("https://api.kiwiandoesthings.place/request_loginInfo?username=" + usernameValue + "&password=" + passwordValue);
-	var json = await loginInfo.json();
-	var userID = json.userID;
-	var userSecret = json.userSecret;
-	if (json == "-1") {
-		alert("Login is invalid");
+	var loginInfo = await fetch(apiString + "request_loginInfo?username=" + usernameValue + "&password=" + encodeURIComponent(passwordValue), {
+		credentials: "include"
+	});
+	if (!loginInfo.ok) {
+		alert(await loginInfo.text());
 		return;
 	}
-	console.log("UserID returned: " + userID);
-	console.log("UserSecret returned: " + userSecret);
-	setLoginInfo(userID, userSecret);
+	var json = await loginInfo.json();
 	setCookie("loggedin", true);
 	window.location.replace('/account.html');
-}
-
-function setLoginInfo(userID, userSecret) {
-	setCookie("userID", userID);
-	setCookie("userSecret", userSecret);
 }

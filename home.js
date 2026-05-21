@@ -2,7 +2,7 @@ var knownSelectInput = document.getElementById("known-room-select-input");
 var newSelectInput = document.getElementById("new-room-select-input");
 
 async function loadClient() {
-	if (getCookie("userID") == "" || getCookie("userSecret") == "") {
+	if (getCookie("userID") == "") {
 		window.location = "/login.html";
 	} else {
 		var userInfo = await getUserInfo();
@@ -16,8 +16,8 @@ async function loadClient() {
 }
 
 var searchOptions = {
-  includeScore: true,
-  threshold: 0.3
+	includeScore: true,
+  	threshold: 0.3
 };
 
 function updateSearchRooms(target, searchItems, elementName) {
@@ -90,11 +90,14 @@ knownSelectInput.addEventListener("input", () => {
 });
 
 async function addAllNewRooms() {
-	var rooms = await fetch("https://api.kiwiandoesthings.place/request_roomSearch?targetName=" + newSelectInput.value + "&userID=" + getCookie("userID") + "&userSecret=" + getCookie("userSecret"));
-	var json = await rooms.json();
-	if (json == "-1") {
-		alert("Your request could not be authenticated. Please clear your cookies and sign in again.");
+	var rooms = await fetch(apiString + "request_roomSearch?targetName=" + newSelectInput.value, {
+    	credentials: "include" 
+	});
+	if (!rooms.ok) {
+		alert(await rooms.text());
+		return;
 	}
+	var json = await rooms.json();
 	clearList("new-room-search-results");
 	var knownRooms = getCookie("knownrooms").split(".");
 	var realRooms = knownRooms.slice(1);
@@ -123,8 +126,12 @@ var roomSelectInput = document.getElementById("new-room-select-input");
 var createButton = document.getElementById("room-create-button");
 createButton.addEventListener("click", () => {
 	var roomName = roomSelectInput.value;
+	return;
 	if (confirm("Are you sure you want to create room \"" + roomName + "\"")) {
-		connection.invoke("push_createRoom", roomName, getCookie("userID"), getCookie("userSecret"));
+		await fetch(apiString + "push_createRoom", roomName, {
+			method: "POST",
+			credentials: "include"
+		});
 		roomSelectInput.value = "";
 		addAllNewRooms();
 	}

@@ -1,4 +1,8 @@
-const connection = new signalR.HubConnectionBuilder().withUrl("https://api.kiwiandoesthings.place/protocall?userID=" + getCookie("userID")).withAutomaticReconnect().build();
+const isDevelopment = true;
+const apiString = isDevelopment ? "https://localhost:7164/" : "https://api.kiwiandoesthings.place/";
+const connection = new signalR.HubConnectionBuilder().withUrl(apiString + "protocall?userID=" + getCookie("userID"), {
+        withCredentials: true
+    }).withAutomaticReconnect().configureLogging(signalR.LogLevel.Information).build();
 
 connection.on("push_serverMessage", (alertMessage) => {
 	alert(alertMessage);
@@ -36,15 +40,16 @@ async function easyStart() {
 }
 
 async function getUserInfo(userID = getCookie("userID")) {
-	var userInfo = await fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + userID);
-	var json = await userInfo.json();
-	if (json == "-1") {
+	var userInfo = await fetch(apiString + "request_userInfo?userID=" + userID, {
+    	credentials: "include" 
+	});
+	if (!userInfo.ok) {
 		return {
 			userUsername: "Unknown",
 			userColor: "808080"
 		};
 	} else {
-		return json;
+		return await userInfo.json();
 	}
 }
 
@@ -53,19 +58,24 @@ if (getCookie("knownrooms") == "") {
 }
 
 async function getRoomInfo(roomID) {
-	var roomInfo = await fetch("https://api.kiwiandoesthings.place/request_roomInfo?roomID=" + roomID);
-	var json = await roomInfo.json();
-	if (json == "-1") {
-		return "-1";
+	var roomInfo = await fetch(apiString + "request_roomInfo?roomID=" + roomID, {
+    	credentials: "include" 
+	});
+	if (!roomInfo.ok) {
+		//alert(await roomInfo.text());
+		return -1;
 	}
+	var json = await roomInfo.json();
 	return json;
 }
 
 async function getRoomID(roomName) {
-	var roomInfo = await fetch("https://api.kiwiandoesthings.place/request_roomID?roomName=" + roomName);
-	var json = await roomInfo.json();
-	if (json == "-1") {
-		return "-1";
+	var roomInfo = await fetch(apiString + "request_roomID?roomName=" + roomName, {
+    	credentials: "include" 
+	});
+	if (!roomInfo.ok) {
+		alert(await roomInfo.text());
 	}
+	var json = await roomInfo.json();
 	return json.roomID;
 }

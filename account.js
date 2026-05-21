@@ -1,4 +1,4 @@
-if (getCookie("userID") == "" || getCookie("userSecret") == "") {
+if (getCookie("userID") == "") {
 	window.location = "/login.html";
 }
 
@@ -8,18 +8,20 @@ for (var room in knownRooms) {
 		continue;
 	}
 	var parts = knownRooms[room].split(",");
-	//addVisualRoom(parts[0], parts[1]);
 }
 
 async function start() {
     try {
         await connection.start();
         console.log("Connected to server");
-		var userInfo = await fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + getCookie("userID"));
-		var json = await userInfo.json();
-		if (json == "-1") {
+		var userInfo = await fetch(apiString + "request_userInfo?userID=" + getCookie("userID"), {
+    		credentials: "include" 
+		});
+		if (!userInfo.ok) {
+			alert(await userInfo.text());
 			window.location = "/login.html";
 		}
+		var json = await userInfo.json();
 		var nameDisplay = document.getElementById("username-display");
 		nameDisplay.innerHTML = "Currently logged in as: <span style=\"color: #" + json.userColor + "\">" + json.userUsername + "</span>";
     } catch (error) {
@@ -30,8 +32,7 @@ async function start() {
 start();
 
 function logout() {
-	setCookie("userID", "");
-	setCookie("userSecret", "");
+	setCookie("loggedin", false);
 	window.location = "/login.html";
 }
 
@@ -40,7 +41,7 @@ function addVisualRoom(roomName, roomID) {
 	var listItem = document.createElement("li");
 	var link = document.createElement("a");
 	var buttonDelete = document.createElement("button");
-	//buttonDelete
+
 	link.href = "javascript:void(0)";
 	link.addEventListener("click", function(event) {
         event.preventDefault();
@@ -55,14 +56,14 @@ function resetKnownRooms() {
 	setCookie("knownrooms", ".HomeRoom,0");
 }
 
-function promptDelete() {
+async function promptDelete() {
 	if (prompt("Are you sure you want to delete your account? You will lose ownership of any rooms you own and they will be made public.")) {
-		connection.invoke("push_deleteAccount", getCookie("userID"), getCookie("userSecret"));
+		await fetch(apiString + "push_deleteAccount", {
+			method: "POST",
+			credentials: "include"
+		});
 	}
-}
 
-connection.on("push_accountDeleted", async() => {
-	alert("Your account has been deleted");
-	setCookie("userID", "");
-	setCookie("userSecret", "");
-});
+	setCookie("loggedin", false);
+	window.location = "/login.html";
+}

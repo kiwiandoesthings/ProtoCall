@@ -1,7 +1,7 @@
 document.getElementById("warning").innerHTML = "WARNING: This version of ProtoCall is in testing. Beware of bugs and unfinished features";
 
 async function loadClient() {
-	if (getCookie("userID") == "" || getCookie("userSecret") == "") {
+	if (getCookie("userID") == "") {
 		window.location = "/login.html";
 	} else {
 		var info = await getUserInfo(getCookie("userID"));
@@ -71,9 +71,9 @@ async function connectToRoom() {
 		roomID = 0;
 	}
 	var json = await getRoomInfo(roomID);
-	if (json == "-1") {
+	if (json == -1) {
 		if (confirm("That room does not exist! Create it?")) {
-			connection.invoke("push_createRoom", roomName, getCookie("userID"), getCookie("userSecret"));
+			connection.invoke("push_createRoom", roomName);
 		}
 		return;
 	}
@@ -89,7 +89,7 @@ async function connectToRoom() {
 
 async function connectToRoomID(roomID) {
 	var roomInfo = await getRoomInfo(roomID);
-	if (roomInfo == "-1") {
+	if (roomInfo == -1) {
 		alert("Failed to connect directly to room");
 		connectToRoomID(0);
 		return;
@@ -134,7 +134,9 @@ connection.on("push_recieveMessages", async (messages) => {
 
 	var fetchPromises = messages.map(message => {
         if (userInfos[message.authorID] === undefined) {
-            userInfos[message.authorID] = fetch("https://api.kiwiandoesthings.place/request_userInfo?userID=" + message.authorID).then(result => result.json()).catch(() => ({ userUsername: "Unknown", userColor: "808080" }));
+            userInfos[message.authorID] = fetch(apiString + "request_userInfo?userID=" + message.authorID, {
+    			credentials: "include" 
+			}).then(result => result.json()).catch(() => ({ userUsername: "Unknown", userColor: "808080" }));
         }
         return userInfos[message.authorID];
     });
@@ -182,7 +184,7 @@ async function send() {
 		return;
 	}
 	if (connected && currentRoomID != -1) {
-		await connection.invoke("push_sendMessage", getCookie("userID"), getCookie("userSecret"), sanitizedText, getDatetime(), parseInt(currentRoomID));
+		await connection.invoke("push_sendMessage", sanitizedText, getDatetime(), parseInt(currentRoomID));
 		if (shouldCancelMessageClear) {
 			shouldCancelMessageClear = false;
 			return;
@@ -289,5 +291,5 @@ function editRoom() {
 }
 
 async function requestMessages(start, end) {
-	await connection.invoke("push_messageRequest", start, end, getCookie("userID"), getCookie("userSecret"), parseInt(currentRoomID));
+	await connection.invoke("push_messageRequest", start, end, parseInt(currentRoomID));
 }

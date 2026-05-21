@@ -3,7 +3,7 @@ var urlParams = new URLSearchParams(queryString);
 var roomID = urlParams.get('roomID') || -1;
 roomID = parseInt(roomID);
 if (roomID == -1) {
-	//window.location.replace("/chat.html");
+	window.location.replace("/chat.html");
 }
 
 var oppositePublicity = "";
@@ -23,5 +23,5 @@ start();
 easyStart();
 
 async function toggleRoomPrivacy() {
-	await connection.invoke("push_setRoomPrivacy", roomID, oppositePublicity, getCookie("userID"), getCookie("userSecret"));
+	await connection.invoke("push_setRoomPrivacy", roomID, oppositePublicity);
 }
