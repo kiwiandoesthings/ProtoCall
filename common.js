@@ -1,4 +1,4 @@
-const isDevelopment = true;
+const isDevelopment = false;
 const apiString = isDevelopment ? "https://localhost:7164/" : "https://api.kiwiandoesthings.place/";
 const connection = new signalR.HubConnectionBuilder().withUrl(apiString + "protocall?userID=" + getCookie("userID"), {
         withCredentials: true
