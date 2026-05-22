@@ -11,7 +11,7 @@ connection.on("push_serverMessage", (alertMessage) => {
 function setCookie(key, value) {
   const expiry = new Date();
   expiry.setDate(expiry.getDate() + 365);
-  document.cookie = `${key}=${value}; expires=${expiry.toUTCString()}; path=/`;
+  document.cookie = `${key}=${value}; expires=${expiry.toUTCString()}; domain=.kiwiandoesthings.place; path=/`;
 }
 
 function getCookie(cookie) {

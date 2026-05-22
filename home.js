@@ -124,7 +124,7 @@ easyStart();
 
 var roomSelectInput = document.getElementById("new-room-select-input");
 var createButton = document.getElementById("room-create-button");
-createButton.addEventListener("click", () => {
+createButton.addEventListener("click", async () => {
 	var roomName = roomSelectInput.value;
 	return;
 	if (confirm("Are you sure you want to create room \"" + roomName + "\"")) {
