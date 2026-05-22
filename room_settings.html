@@ -23,10 +23,10 @@
 			<div class="small-form">
 				<button id="room-privacy-toggle-button" onclick="toggleRoomPrivacy()"></button><br><br>
 				<input id="user-access-input" placeholder="Cool_User12"></button>
-				<div style="display: flex; flex-direction: row; justify-content: space-between; width: 70%; margin-left: auto; margin-right: auto;">
-					<button>Ban User</button>
-					<button>Give User Access To Room</button>
-					<button>Make User Moderator</button>
+				<div class="small-form-section">
+					<button id="ban-user-button" onclick="setUserAccess(-1)">Ban User</button>
+					<button id="give-access-button" onclick="setUserAccess(0)">Give User Access To Room</button>
+					<button id="give-moderator-button" onclick="setUserAccess(1)">Make User Moderator</button>
 				</div>
 			</div>
 		</main>

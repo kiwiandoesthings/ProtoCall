@@ -5,8 +5,8 @@ async function loadClient() {
 		window.location = "/login.html";
 	} else {
 		var info = await getUserInfo(getCookie("userID"));
-		var username = await info.userUsername;
-		var color = await info.userColor;
+		var username = info.userUsername;
+		var color = info.userColor;
 		document.getElementById("username-view").innerHTML = username;
 		document.getElementById("username-view").style.color = "#" + color;
 	}
@@ -130,48 +130,58 @@ connection.on("push_recieveRoom", async (roomName, roomID) => {
 });
 
 connection.on("push_recieveMessages", async (messages) => {
-	canRequestMessages = true;
+    canRequestMessages = true;
 
-	var fetchPromises = messages.map(message => {
+    var fetchPromises = messages.map(message => {
         if (userInfos[message.authorID] === undefined) {
             userInfos[message.authorID] = fetch(apiString + "request_userInfo?userID=" + message.authorID, {
-    			credentials: "include" 
-			}).then(result => result.json()).catch(() => ({ userUsername: "Unknown", userColor: "808080" }));
+                credentials: "include" 
+            }).then(result => {
+                if (!result.ok) throw new Error("User not found");
+                return result.json();
+            }).catch(() => ({ 
+                userUsername: "Unknown", 
+                userColor: "808080" 
+            }));
         }
         return userInfos[message.authorID];
     });
-	
-	await Promise.all(fetchPromises);
+    
+    await Promise.all(fetchPromises);
 
-	var isHistory = earliestMessageIndex !== -1 && messages[0].messageIndex < earliestMessageIndex;
+    var isHistory = earliestMessageIndex !== -1 && messages[0].messageIndex < earliestMessageIndex;
 
     if (isHistory) {
         messages.reverse();
     }
 
-	for (var message of messages) {
+    for (var message of messages) {
         var userInfo = await userInfos[message.authorID];
 
-        if (message.messageIndex === earliestMessageIndex && isHistory) {
-			continue;
-		}
+        var displayName = (userInfo && userInfo.userUsername) ? userInfo.userUsername : "Unknown";
+        var displayColor = (userInfo && userInfo.userColor) ? "#" + userInfo.userColor : "#808080";
 
-		var sendTime = message.messageTimestamp;
-		if (sendTime.length == 0) {
-			sendTime = "Unknown Time";
-		}
+        if (message.messageIndex === earliestMessageIndex && isHistory) {
+            continue;
+        }
+
+        var sendTime = message.messageTimestamp;
+        if (!sendTime || sendTime.length === 0) {
+            sendTime = "Unknown Time";
+        }
 
         if (!isHistory) {
-            log(message.content, userInfo.userUsername, "#" + userInfo.userColor, sendTime, false);
+            log(message.content, displayName, displayColor, sendTime, false);
+            
             latestMessageIndex = Math.max(latestMessageIndex, message.messageIndex);
             if (earliestMessageIndex === -1 || message.messageIndex < earliestMessageIndex) {
                 earliestMessageIndex = message.messageIndex;
             }
         } else {
-            log(message.content, userInfo.userUsername, "#" + userInfo.userColor, sendTime, true);
+            log(message.content, displayName, displayColor, sendTime, true);
             earliestMessageIndex = message.messageIndex;
         }
-    };
+    }
 });
 
 async function send() {

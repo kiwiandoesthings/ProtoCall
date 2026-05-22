@@ -22,11 +22,13 @@
 			<h2 id="userInfo"></h2>
 
 			<div class="small-form">
-				<input type="text" id="username" placeholder="Chose a username" maxlength="18"/><br>
-				<input type="text" id="password" placeholder="Chose a password" maxlength="18"/><br>
-				<input style="width: 5%" id="color" type="color" value="#ffffff"/>
-				<label id="colorlabel" for="color" style="background-color: black;">Your text color. Please prefer high-contrast colors.</label><br>
-  				<button id="submit" onclick="register()">Register</button>
+				<form autocomplete="dont-do-it">
+					<input type="text" id="username" placeholder="Chose a username" maxlength="18" autocomplete="dont-do-it"/><br>
+					<input type="text" id="password" placeholder="Chose a password" maxlength="18" autocomplete="dont-do-it"/><br>
+					<input style="width: 5%" id="color" type="color" value="#ffffff" autocomplete="dont-do-it"/>
+					<label id="colorlabel" for="color" style="background-color: black;" autocomplete="dont-do-it">Your text color. Please prefer high-contrast colors.</label><br>
+  					<button id="submit" onclick="register()" autocomplete="dont-do-it">Register</button>
+				</form>
 			</div>
 			<a href="login.html">Already registered?</a>
 		</main>

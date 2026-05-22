@@ -1,4 +1,4 @@
-const isDevelopment = false;
+const isDevelopment = true;
 const apiString = isDevelopment ? "https://localhost:7164/" : "https://api.kiwiandoesthings.place/";
 const connection = new signalR.HubConnectionBuilder().withUrl(apiString + "protocall?userID=" + getCookie("userID"), {
         withCredentials: true
@@ -75,7 +75,20 @@ async function getRoomID(roomName) {
 	});
 	if (!roomInfo.ok) {
 		alert(await roomInfo.text());
+		return -1;
 	}
 	var json = await roomInfo.json();
 	return json.roomID;
+}
+
+async function getUserId(userName) {
+	var userInfo = await fetch(apiString + "request_userID?userName=" + userName, {
+    	credentials: "include" 
+	});
+	if (!userInfo.ok) {
+		alert(await userInfo.text());
+		return -1;
+	}
+	var json = await userInfo.json();
+	return json.userID;
 }

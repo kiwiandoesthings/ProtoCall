@@ -25,3 +25,23 @@ easyStart();
 async function toggleRoomPrivacy() {
 	await connection.invoke("push_setRoomPrivacy", roomID, oppositePublicity);
 }
+
+var userInput = document.getElementById("user-access-input");
+var banButton = document.getElementById("ban-user-button");
+var accessButton = document.getElementById("give-access-button");
+var moderatorButton = document.getElementById("give-moderator-button");
+
+async function setUserAccess(accessLevel) {
+	var userID = await getUserId(userInput.value);
+	if (userID == -1) {
+		return;
+	}
+
+	var result = await fetch(apiString + "push_setUserAccess?userID=" + userID + "&access=" + accessLevel, {
+		method: "POST",
+		credentials: "include"
+	});
+	if (!result.ok) {
+		alert(await result.text());
+	}
+}
