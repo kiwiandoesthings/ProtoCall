@@ -1,5 +1,5 @@
 if (getCookie("userID") == "") {
-	window.location = "/login.html";
+	//window.location = "/login.html";
 }
 
 var knownRooms = getCookie("knownrooms").split(".");
@@ -19,7 +19,7 @@ async function start() {
 		});
 		if (!userInfo.ok) {
 			alert(await userInfo.text());
-			window.location = "/login.html";
+			//window.location = "/login.html";
 		}
 		var json = await userInfo.json();
 		var nameDisplay = document.getElementById("username-display");

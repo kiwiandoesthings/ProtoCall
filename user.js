@@ -1,5 +1,5 @@
 if (getCookie("userID") != "") {
-	window.location = "/account.html";
+	//window.location = "/account.html";
 }
 
 var colorLabel = document.getElementById("colorlabel");
@@ -48,7 +48,7 @@ async function register() {
 	}
 	var json = await loginInfo.json();
 	setCookie("loggedin", true);
-	window.location.replace('/account.html');
+	//window.location.replace('/account.html');
 }
 
 async function login() {
@@ -64,5 +64,5 @@ async function login() {
 	}
 	var json = await loginInfo.json();
 	setCookie("loggedin", true);
-	window.location.replace('/account.html');
+	//window.location.replace('/account.html');
 }
