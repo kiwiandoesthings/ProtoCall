@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 html {
 	/* Chat */
 	--message-color: rgb(224, 224, 224);
@@ -217,6 +219,8 @@ nav {
 	font-size: 12px;
 	background-color: var(--background-color);
 	grid-auto-rows: min-content;
+	font-family: "JetBrains Mono", 'Courier New', Courier, monospace;
+	font-variant-ligatures: normal;
 }
 
 .timestamp {

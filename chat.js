@@ -1,4 +1,4 @@
-document.getElementById("warning").innerHTML = "WARNING: This version of ProtoCall is in testing. Beware of bugs and unfinished features";
+//document.getElementById("warning").innerHTML = "WARNING: This version of ProtoCall is in testing. Beware of bugs and unfinished features";
 
 async function loadClient() {
 	if (getCookie("userID") == "") {
@@ -7,8 +7,7 @@ async function loadClient() {
 		var info = await getUserInfo(getCookie("userID"));
 		var username = info.userUsername;
 		var color = info.userColor;
-		document.getElementById("username-view").innerHTML = username;
-		document.getElementById("username-view").style.color = "#" + color;
+		document.getElementById("username-view").innerHTML = `<span style="color: white;">Logged in as: </span><span style="color: #` + color + `;">` + username + `</span>`;
 	}
 }
 
@@ -29,6 +28,9 @@ var currentRoomName = "";
 
 var totalMessages = 0;
 var canRequestMessages = true;
+
+var favoritesSelect = document.getElementById("quick-room-select");
+var favoritesGroup = document.getElementById("quick-room-select-favorites");
 
 document.getElementById("chat-input").addEventListener("keydown", function(event) {
 	if (event.key === "Enter") {
@@ -52,6 +54,9 @@ async function start() {
         await connection.start();
         console.log("Connected to server");
 		setConnected();
+
+		fillFavoritesDropdown();
+
 		var queryString = window.location.search;
 		var urlParams = new URLSearchParams(queryString);
 		var roomName = urlParams.get('connectToRoom') || 'HomeRoom';
@@ -64,10 +69,10 @@ async function start() {
 
 start();
 
-async function connectToRoom() {
-	var roomName = document.getElementById("room-select-input").value;
+async function connectToRoom(roomName) {
+	console.log(roomName + " connectin");
 	var roomID = await getRoomID(roomName);
-	if (roomID == "-1") {
+	if (roomID == -1) {
 		roomID = 0;
 	}
 	var json = await getRoomInfo(roomID);
@@ -78,7 +83,9 @@ async function connectToRoom() {
 		return;
 	}
 	clearLog();
-	currentRoomID = json.roomID;
+	console.log(roomID);
+	console.log(json);
+	currentRoomID = roomID;
 	setRoomInfos(json);
 	systemLog("You have successfully connected to room \"" + colorMsg(roomName, "var(--server-alert-color)") + "\"");
 	await requestMessages(-1, 50);
@@ -94,6 +101,7 @@ async function connectToRoomID(roomID) {
 		connectToRoomID(0);
 		return;
 	}
+	favoritesSelect.value = roomInfo.roomName;
 	currentRoomID = roomID;
 	setRoomInfos(roomInfo);
 	systemLog("You have successfully connected to room \"" + colorMsg(roomInfo.roomName, "var(--server-alert-color)") + "\"");
@@ -302,4 +310,22 @@ function editRoom() {
 
 async function requestMessages(start, end) {
 	await connection.invoke("push_messageRequest", start, end, parseInt(currentRoomID));
+}
+
+favoritesSelect.addEventListener("change", () => {
+	console.log(favoritesSelect.value);
+	connectToRoom(favoritesSelect.value);
+});
+
+function fillFavoritesDropdown() {
+	var favoriteRooms = getCookie("favrooms").split(".").slice(1);
+	favoriteRooms.sort((a, b) => a.split(",")[0].localeCompare(b.split(",")[0]));
+	for (var room of favoriteRooms) {
+		var parts = room.split(",");
+
+		var optionElement = document.createElement("option");
+		optionElement.innerHTML = parts[0];
+
+		favoritesGroup.appendChild(optionElement);
+	}
 }

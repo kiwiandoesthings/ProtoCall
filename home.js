@@ -45,14 +45,25 @@ function updateSearchRooms(target, searchItems, elementName) {
 function addAllKnownRooms() {
 	clearList("known-room-search-results");
 	var knownRooms = getCookie("knownrooms");
+	var favoriteRoomsCookie = getCookie("favrooms");
 	var rooms = knownRooms.split(".").slice(1);
+	var favoriteRooms = favoriteRoomsCookie.split(".").slice(1);
 	for (var room of rooms) {
 		var parts = room.split(",");
-		var buttons = `
-        	<img src="resources/delete.png" class="icon-small" onclick="removeRoom(\'` + parts[0] + `\', ` + parts[1] + `)">`;
-		if (parts[0].toLowerCase() == "homeroom") {
-			buttons = "";
+
+		var favoriteType = "favorite";
+		for (var favoriteRoom of favoriteRooms) {
+			if (favoriteRoom.split(",")[0] == parts[0]) {
+				favoriteType = "un" + favoriteType;
+				break;
+			}
 		}
+
+		var buttons = ``;
+		if (parts[0].toLowerCase() != "homeroom") {
+			buttons += `<img src="resources/delete.png" class="icon-small" onclick="removeRoom(\'` + parts[0] + `\', ` + parts[1] + `)"></img>`;
+		}
+		buttons += `<img src="resources/` + favoriteType + `.png" class="icon-small" onclick="` + favoriteType + `Room(\'` + parts[0] + `\', ` + parts[1] + `)">`;
 		addVisualRoom(parts[0], parts[1], "known-room-search-results", buttons);
 	}
 }
@@ -126,9 +137,9 @@ var roomSelectInput = document.getElementById("new-room-select-input");
 var createButton = document.getElementById("room-create-button");
 createButton.addEventListener("click", async () => {
 	var roomName = roomSelectInput.value;
-	return;
 	if (confirm("Are you sure you want to create room \"" + roomName + "\"")) {
-		await fetch(apiString + "push_createRoom", roomName, {
+		console.log("e");
+		await fetch(apiString + "push_createRoom?roomName=" + roomName, {
 			method: "POST",
 			credentials: "include"
 		});
@@ -148,6 +159,7 @@ function addRoom(roomName, roomID) {
 	setCookie("knownrooms", getCookie("knownrooms") + "." + roomName + "," + roomID);
 
 	addAllKnownRooms();
+	addAllNewRooms();
 }
 
 function removeRoom(roomName, roomID) {
@@ -160,6 +172,36 @@ function removeRoom(roomName, roomID) {
 		newRooms += "." + room;
 	}
 	setCookie("knownrooms", newRooms);
+
+	unfavoriteRoom(roomName, roomID);
+
+	addAllKnownRooms();
+	addAllNewRooms();
+}
+
+function favoriteRoom(roomName, roomID) {
+	var favoriteRooms = getCookie("favrooms").split(".").slice(1);
+	for (var room of favoriteRooms) {
+		if (room.substring(0, room.indexOf(",")) == roomName) {
+			return;
+		}
+	}
+
+	setCookie("favrooms", getCookie("favrooms") + "." + roomName + "," + roomID);
+
+	addAllKnownRooms();
+}
+
+function unfavoriteRoom(roomName, roomID) {
+	var favoriteRooms = getCookie("favrooms").split(".").slice(1);
+	var newRooms = "";
+	for (var room of favoriteRooms) {
+		if (room.substring(0, room.indexOf(",")) == roomName) {
+			continue;
+		}
+		newRooms += "." + room;
+	}
+	setCookie("favrooms", newRooms);
 
 	addAllKnownRooms();
 }
