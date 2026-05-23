@@ -59,11 +59,12 @@ function addAllKnownRooms() {
 			}
 		}
 
+		var safeName = parts[0].replace(/'/g, "\\'");
 		var buttons = ``;
 		if (parts[0].toLowerCase() != "homeroom") {
-			buttons += `<img src="resources/delete.png" class="icon-small" onclick="removeRoom(\'` + parts[0] + `\', ` + parts[1] + `)"></img>`;
+			buttons += `<img src="resources/delete.png" class="icon-small" onclick="removeRoom(\'` + safeName + `\', ` + parts[1] + `)"></img>`;
 		}
-		buttons += `<img src="resources/` + favoriteType + `.png" class="icon-small" onclick="` + favoriteType + `Room(\'` + parts[0] + `\', ` + parts[1] + `)">`;
+		buttons += `<img src="resources/` + favoriteType + `.png" class="icon-small" onclick="` + favoriteType + `Room(\'` + safeName + `\', ` + parts[1] + `)">`;
 		addVisualRoom(parts[0], parts[1], "known-room-search-results", buttons);
 	}
 }
@@ -120,8 +121,9 @@ async function addAllNewRooms() {
 		if (knownNames.includes(room.roomName)) {
 			continue;
 		}
+		var safeName = room.roomName.replace(/'/g, "\\'");
 		addVisualRoom(room.roomName, room.roomID, "new-room-search-results", `
-        <img src="resources/add.png" class="icon-small" onclick="addRoom(\'` + room.roomName + `\', ` + room.roomID + `)">`);
+        <img src="resources/add.png" class="icon-small" onclick="addRoom(\'` + safeName + `\', ` + room.roomID + `)">`);
 	}
 }
 
