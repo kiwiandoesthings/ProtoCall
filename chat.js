@@ -31,6 +31,7 @@ var canRequestMessages = true;
 
 var favoritesSelect = document.getElementById("quick-room-select");
 var favoritesGroup = document.getElementById("quick-room-select-favorites");
+var connectionLabel = document.getElementById("connection-status");
 
 document.getElementById("chat-input").addEventListener("keydown", function(event) {
 	if (event.key === "Enter") {
@@ -104,14 +105,18 @@ async function connectToRoomID(roomID) {
 	favoritesSelect.value = roomInfo.roomName;
 	currentRoomID = roomID;
 	setRoomInfos(roomInfo);
-	systemLog("You have successfully connected to room \"" + colorMsg(roomInfo.roomName, "var(--server-alert-color)") + "\"");
+	systemLog("Successfully loaded information for room \"" + colorMsg(roomInfo.roomName, "var(--server-alert-color)") + "\"");
 	await requestMessages(-1, 50);
 }
 
 async function setRoomInfos(roomJson) {
 	document.getElementById("room-name").innerHTML = roomJson.roomName;
 	document.getElementById("room-status").innerHTML = roomJson.privacy;
-	document.getElementById("room-status").style.color = "var(--public-color)";
+	var color = "var(--bad-color)";
+	if (roomJson.privacy.toLowerCase() == "public") {
+		color = "var(--good-color)";
+	}
+	document.getElementById("room-status").style.color = color;
 
 	var listItem = document.createElement("li");
 	var userInfo = await getUserInfo(getCookie("userID"));
@@ -123,6 +128,8 @@ async function setRoomInfos(roomJson) {
 connection.onclose(error => {
 	systemLog("You have disconnected from the server!");
 	lostConnection = true;
+	connectionLabel.style.color = "var(--bad-color)";
+	connectionLabel.innerHTML = "NOT CONNECTED";
 });
 
 connection.onreconnected(connectionID => {
@@ -225,6 +232,8 @@ function setConnected() {
 		systemLog("You have successfully connected to the server!");
 	}
 	connected = true;
+	connectionLabel.style.color = "var(--good-color)";
+	connectionLabel.innerHTML = "CONNECTED";
 }
 
 function systemLog(text, back = false) {

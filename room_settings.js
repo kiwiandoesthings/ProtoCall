@@ -30,6 +30,7 @@ async function toggleRoomPrivacy() {
 	if (!response.ok) {
 		alert(await response.text());
 	}
+	start();
 }
 
 var userInput = document.getElementById("user-access-input");
