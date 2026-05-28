@@ -34,11 +34,8 @@ async function register() {
 	var color = colorPicker.value.slice(1);
 	var passwordValue = password.value;
 
-	var thisInfo = await fetch(apiString + "request_deviceInfo", {
-    	credentials: "include" 
-	});
-	var thisJson = await thisInfo.json();
-	var loginInfo = await fetch(apiString + "push_registerAccount?username=" + usernameValue + "&password=" + encodeURIComponent(passwordValue) + "&color=" + color + "&info=" + thisJson.id, {
+
+	var loginInfo = await fetch(apiString + "push_registerAccount?username=" + usernameValue + "&password=" + encodeURIComponent(passwordValue) + "&color=" + color, {
     	method: "POST",
 		credentials: "include" 
 	});

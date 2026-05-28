@@ -50,8 +50,9 @@ document.getElementById("chat-messages-area").addEventListener("wheel", function
 });
 
 async function start() {
+	clearLog();
+	systemLog("Connecting to server...");
     try {
-		clearLog();
         await connection.start();
         console.log("Connected to server");
 		setConnected();
@@ -64,7 +65,7 @@ async function start() {
 		var roomID = await getRoomID(roomName);
 		await connectToRoomID(roomID);
     } catch (error) {
-        console.log("Error connecting: " + error);
+        systemLog("Error connecting to server: \"" + error + "\"", false, true);
     }
 }
 
@@ -203,7 +204,7 @@ async function send() {
 	var input = document.getElementById("chat-input");
 	var sanitizedText = sanitizeText(input.value);
 	if (sanitizedText != input.value) {
-		systemLog("You cannot send messages with disallowed HTML tags!");
+		systemLog("You cannot send messages with disallowed HTML tags!", false, true);
 	}
 	if (sanitizedText == "") {
 		return;
@@ -216,10 +217,10 @@ async function send() {
 		}
 		input.value = "";
 	} else {
-		if (currentRoomID != -1) {
-			systemLog("You cannot send messages while not connected!");
+		if (!connected) {
+			systemLog("You cannot send messages while not connected!", false, true);
 		} else {
-			systemLog("You cannot send messages while not in a room!");
+			systemLog("You cannot send messages while not in a room!", false, true);
 		}
 	}
 }
@@ -236,8 +237,12 @@ function setConnected() {
 	connectionLabel.innerHTML = "CONNECTED";
 }
 
-function systemLog(text, back = false) {
-	log(colorMsg(text, "var(--server-message-color)"), "&lt;System", "var(--server-message-color)", getDatetime(), back);
+function systemLog(text, back = false, error = false) {
+	var color = "var(--server-message-color)";
+	if (error) {
+		color = "var(--bad-color)";
+	}
+	log(colorMsg(text, color), "&lt;System", "var(--server-message-color)", getDatetime(), back);
 }
 
 function log(text, authorUsername, authorColor, timestamp, back = false) {
