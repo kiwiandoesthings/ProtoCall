@@ -58,7 +58,7 @@ function resetKnownRooms() {
 }
 
 async function promptDelete() {
-	if (prompt("Are you sure you want to delete your account? You will lose ownership of any rooms you own and they will be made public.")) {
+	if (confirm("Are you sure you want to delete your account? You will lose ownership of any rooms you own and they will be made public.")) {
 		await fetch(apiString + "push_deleteAccount", {
 			method: "POST",
 			credentials: "include"

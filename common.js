@@ -52,6 +52,17 @@ async function getUserInfo(userID = getCookie("userID")) {
 	}
 }
 
+async function getUserProfile(userID = getCookie("userID")) {
+	var userProfile = await fetch(apiString + "request_userProfile?userID=" + userID, {
+		credentials: "include"
+	});
+	if (!userProfile.ok) {
+		return null;
+	} else {
+		return await userProfile.json();
+	}
+}
+
 if (getCookie("knownrooms") == "") {
 	setCookie("knownrooms", ".HomeRoom,0");
 }
@@ -90,4 +101,11 @@ async function getUserId(userName) {
 	}
 	var json = await userInfo.json();
 	return json.userID;
+}
+
+function getUrlParameter(parameter) {
+	var queryString = window.location.search;
+	var urlParams = new URLSearchParams(queryString);
+
+	return urlParams.get(parameter) || null;
 }

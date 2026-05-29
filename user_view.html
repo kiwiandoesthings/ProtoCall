@@ -18,17 +18,13 @@
 		</nav>
 
 		<main id="page-heading">
-			<h1>Log In</h1>
-			<h2 id="userInfo"></h2>
-
-			<div class="small-form">
-				<form autocomplete="dont-do-it">
-					<input id="username" placeholder="Enter your username" maxlength="18" autocomplete="dont-do-it"/>
-					<input id="password" placeholder="Enter your password" maxlength="24" autocomplete="dont-do-it"/>
-  					<button id="submit" onclick="login()" autocomplete="dont-do-it" type="button">Login</button>
-				</form>	
+			<div id="user-view-area">
+				<div id="user-header">
+					<img id="profile-picture-view">
+					<h1 id="username-view"></h1>
+				</div>
+				<p id="user-about-view"></p>
 			</div>
-			<a href="register.html">Not registered?</a>
 		</main>
 
 		<footer>
@@ -37,6 +33,6 @@
 
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
 		<script src="common.js"></script>
-  		<script src="user.js"></script>
+  		<script src="user_view.js"></script>
 	</body>
 </html>

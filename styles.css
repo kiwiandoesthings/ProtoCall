@@ -10,6 +10,7 @@ html {
 	--timestamp-color-selected: white;
 	--background-color: black;
 	--background-color-selected: rgb(20, 20, 20);
+	--background-color-yes: #494949;
 	/* Sidebars */
 	--secondary-background-color: #262626;
 	--good-color: rgb(0, 255, 0);
@@ -20,7 +21,7 @@ html {
 }
 
 html, body {
-	background-color: var(--secondary-background-color);
+	background-color: var(--background-color);
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -115,7 +116,7 @@ nav {
 	display: flex;
 	align-items: center;
 	padding: 10px;
-	background-color: #494949;
+	background-color: var(--secondary-background-color);
 	position: relative;
 }
 
@@ -143,6 +144,7 @@ nav {
 
 #chat-bar-right {
 	width: 15%;
+	background-color: var(--secondary-background-color);
 }
 
 #room-name {
@@ -371,4 +373,30 @@ img {
 
 .result-actions img {
 	flex: 1;
+}
+
+#user-header {
+	display: flex;
+	flex-direction: row;
+	height: 100px;
+	padding: 40px;
+	align-items: center;
+}
+
+#profile-picture-view {
+	height: 100%;
+	width: auto;
+}
+
+#username-view {
+	font-size: 48px;
+	margin-left: 20px;
+}
+
+#user-about-view {
+	background-color: var(--secondary-background-color);
+	padding: 40px;
+	width: 70%;
+	margin: auto;
+	text-align: left;
 }

@@ -23,10 +23,11 @@
 
 			<div class="small-form">
 				<form autocomplete="dont-do-it">
-					<input type="text" id="username" placeholder="Chose a username" minlength="3" maxlength="18" autocomplete="dont-do-it"/><br>
-					<input type="text" id="password" placeholder="Chose a password" maxlength="18" autocomplete="dont-do-it"/><br>
+					<input type="text" id="username" placeholder="Chose a username" maxlength="18" autocomplete="dont-do-it"/><br>
+					<input type="text" id="password" placeholder="Chose a password" maxlength="24" autocomplete="dont-do-it"/><br>
 					<input style="width: 5%" id="color" type="color" value="#ffffff" autocomplete="dont-do-it"/>
 					<label id="colorlabel" for="color" style="background-color: black;" autocomplete="dont-do-it">Your text color. Please prefer high-contrast colors.</label><br>
+					<input type="file" id="profile-picture-input" accept="image/png, image/jpeg, image/gif">
   					<button id="submit" onclick="register()" autocomplete="dont-do-it" type="button">Register</button>
 				</form>
 			</div>

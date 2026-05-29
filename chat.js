@@ -7,7 +7,7 @@ async function loadClient() {
 		var info = await getUserInfo(getCookie("userID"));
 		var username = info.userUsername;
 		var color = info.userColor;
-		document.getElementById("username-view").innerHTML = `<span style="color: white;">Logged in as: </span><span style="color: #` + color + `;">` + username + `</span>`;
+		document.getElementById("username-view-chat").innerHTML = `<span style="color: white;">Logged in as: </span><span style="color: #` + color + `;">` + username + `</span>`;
 	}
 }
 
